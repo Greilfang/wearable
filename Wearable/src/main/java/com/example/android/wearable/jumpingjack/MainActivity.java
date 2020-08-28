@@ -66,7 +66,12 @@ public class MainActivity extends FragmentActivity
     private static final float HAND_UP_GRAVITY_X_THRESHOLD = -.010f;
 
     private SensorManager mSensorManager;
-    private Sensor mSensor;
+    private Sensor mSensorAccelerometer;
+    private Sensor mSensorGyroscope;
+    private Sensor mSensorMagnetic;
+    private float[] mAccelerometer;
+    private float[] mGeomagnetic;
+    private float[] mGyroscope;
     private long mLastTime = 0;
     private int mJumpCounter = 0;
     private boolean mHandDown = true;
@@ -78,6 +83,7 @@ public class MainActivity extends FragmentActivity
     private ImageView mSecondIndicator;
     private ImageView mFirstIndicator;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +94,12 @@ public class MainActivity extends FragmentActivity
         setupViews();
 
         mJumpCounter = Utils.getCounterFromPreference(this);
+        // Get a reference to the SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        // Get references to the sensors
+        mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mSensorMagnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     private void setupViews() {
@@ -128,10 +138,14 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSensorManager.registerListener(this, mSensor,
-                SensorManager.SENSOR_DELAY_NORMAL)) {
+        if (mSensorManager.registerListener(this, mSensorAccelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL) &&
+             mSensorManager.registerListener(this, mSensorGyroscope,
+                    SensorManager.SENSOR_DELAY_NORMAL) &&
+                mSensorManager.registerListener(this, mSensorMagnetic,
+                        SensorManager.SENSOR_DELAY_NORMAL)) {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Successfully registered for the sensor updates");
+                Log.d(TAG, "Successfully registered for the sensors updates");
             }
         }
     }
@@ -141,13 +155,34 @@ public class MainActivity extends FragmentActivity
         super.onPause();
         mSensorManager.unregisterListener(this);
         if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "Unregistered for sensor events");
+            Log.d(TAG, "Unregistered for sensors events");
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        detectJump(event.values[0], event.timestamp);
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            mAccelerometer = new float[3];
+            System.arraycopy(event.values, 0, mAccelerometer, 0, 3);
+        }
+        else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+            mGyroscope = new float[3];
+            System.arraycopy(event.values, 0, mGyroscope, 0, 3);
+        }
+        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            mGeomagnetic = new float[3];
+            System.arraycopy(event.values, 0, mGeomagnetic, 0, 3);
+        }
+
+        if (mAccelerometer != null) {
+            Log.d(TAG, "mx : "+mAccelerometer[0]+" my : "+mAccelerometer[1]+" mz : "+mAccelerometer[2]);
+        }
+        if (mGyroscope != null) {
+            Log.d(TAG, "mx : "+mGyroscope[0]+" my : "+mGyroscope[1]+" mz : "+mGyroscope[2]);
+        }
+        if (mGeomagnetic != null) {
+            Log.d(TAG, "mx : "+mGeomagnetic[0]+" my : "+mGeomagnetic[1]+" mz : "+mGeomagnetic[2]);
+        }
     }
 
     @Override
