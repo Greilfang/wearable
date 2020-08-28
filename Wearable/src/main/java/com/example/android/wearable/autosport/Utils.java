@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.wearable.jumpingjack;
+package com.example.android.wearable.autosport;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.wearable.jumpingjack;
+package com.example.android.wearable.autosport;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
