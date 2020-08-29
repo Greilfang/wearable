@@ -16,26 +16,28 @@
 
 package com.example.android.wearable.autosport;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
-
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.ambient.AmbientModeSupport;
 
-import com.example.android.wearable.autosport.fragments.CounterFragment;
-import com.example.android.wearable.autosport.fragments.SettingsFragment;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -49,26 +51,13 @@ import java.util.concurrent.TimeUnit;
  * stage, user can set this counter to 0.
  */
 public class MainActivity extends FragmentActivity
-        implements AmbientModeSupport.AmbientCallbackProvider, SensorEventListener {
+        implements AmbientModeSupport.AmbientCallbackProvider, SensorEventListener{
 
     private static final String TAG = "MainActivity";
 
     // An up-down movement that takes more than 2 seconds will not be registered (in nanoseconds).
     private static final long TIME_THRESHOLD_NS = TimeUnit.SECONDS.toNanos(2);
 
-    /**
-     * Earth gravity is around 9.8 m/s^2 but user may not completely direct his/her hand vertical
-     * during the exercise so we leave some room. Basically, if the x-component of gravity, as
-     * measured by the Gravity sensor, changes with a variation delta > 0.03 from the hand down
-     * and hand up threshold we define below, we consider that a successful count.
-     *
-     * This is a very rudimentary formula and is by no means production accurate. You will want to
-     * take into account Y and Z gravity changes to get a truly accurate jumping jack.
-     *
-     * This sample is just meant to show how to easily get sensor values and use them.
-     */
-    private static final float HAND_DOWN_GRAVITY_X_THRESHOLD = -.040f;
-    private static final float HAND_UP_GRAVITY_X_THRESHOLD = -.010f;
     private static final Object FILENAME = "autosport"+new Date().getTime() + ".txt";
 
     private SensorManager mSensorManager;
@@ -82,64 +71,44 @@ public class MainActivity extends FragmentActivity
     private int mJumpCounter = 0;
     private boolean mHandDown = true;
 
-
-    private ViewPager mPager;
-    private CounterFragment mCounterPage;
-    private SettingsFragment mSettingPage;
-    private ImageView mSecondIndicator;
-    private ImageView mFirstIndicator;
-
+    public DemoItem[] mItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.jumping_jack_layout);
+        setContentView(R.layout.activity_main);
 
         AmbientModeSupport.attach(this);
 
-        setupViews();
-
-        mJumpCounter = com.example.android.wearable.autosport.Utils.getCounterFromPreference(this);
+        //setupViews();
         // Get a reference to the SensorManager
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         // Get references to the sensors
         mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mSensorMagnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        mItems = new DemoItem[]{
+                new DemoItem(getString(R.string.send_file_by_intent), com.example.android.wearable.autosport.SendFileByIntentActivity.class),
+                new DemoItem(getString(R.string.run_as_server), com.example.android.wearable.autosport.RunAsServerActivity.class),
+                new DemoItem(getString(R.string.run_as_client), RunAsClientActivity.class)
+        };
+
+        initViews();
     }
 
-    private void setupViews() {
-        mPager = findViewById(R.id.pager);
-        mFirstIndicator = findViewById(R.id.indicator_0);
-        mSecondIndicator = findViewById(R.id.indicator_1);
-
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-
-        mCounterPage = new CounterFragment();
-        mSettingPage = new SettingsFragment();
-
-        adapter.addFragment(mCounterPage);
-        adapter.addFragment(mSettingPage);
-        setIndicator(0);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    private void initViews() {
+        ListView listView = (ListView) findViewById(R.id.demos_list);
+        listView.setAdapter(new MyBaseAdapter());
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i2) {
-                // No-op.
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                setIndicator(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                // No-op.
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, mItems[position].activityClass);
+                startActivity(intent);
             }
         });
-
-        mPager.setAdapter(adapter);
     }
+
 
     @Override
     protected void onResume() {
@@ -225,77 +194,6 @@ public class MainActivity extends FragmentActivity
         writer.flush();
         writer.close();
     }
-    /**
-     * A very simple algorithm to detect a successful up-down movement of hand(s). The algorithm
-     * is based on a delta of the handing being up vs. down and taking less than TIME_THRESHOLD_NS
-     * to happen.
-     *
-     *
-     * This algorithm isn't intended to be used in production but just to show what's possible with
-     * sensors. You will want to take into account other components (y and z) and other sensors to
-     * get a more accurate reading.
-     */
-    private void detectJump(float xGravity, long timestamp) {
-
-        if ((xGravity <= HAND_DOWN_GRAVITY_X_THRESHOLD)
-                || (xGravity >= HAND_UP_GRAVITY_X_THRESHOLD)) {
-
-            if (timestamp - mLastTime < TIME_THRESHOLD_NS) {
-                // Hand is down when yValue is negative.
-                onJumpDetected(xGravity <= HAND_DOWN_GRAVITY_X_THRESHOLD);
-            }
-
-            mLastTime = timestamp;
-        }
-    }
-
-    /**
-     * Called on detection of a successful down -> up or up -> down movement of hand.
-     */
-    private void onJumpDetected(boolean handDown) {
-        if (mHandDown != handDown) {
-            mHandDown = handDown;
-
-            // Only count when the hand is down (means the hand has gone up, then down).
-            if (mHandDown) {
-                mJumpCounter++;
-                setCounter(mJumpCounter);
-            }
-        }
-    }
-
-    /**
-     * Updates the counter on UI, saves it to preferences and vibrates the watch when counter
-     * reaches a multiple of 10.
-     */
-    private void setCounter(int i) {
-        mJumpCounter = i;
-        mCounterPage.setCounter(i);
-        com.example.android.wearable.autosport.Utils.saveCounterToPreference(this, i);
-        if (i > 0 && i % 10 == 0) {
-            com.example.android.wearable.autosport.Utils.vibrate(this, 0);
-        }
-    }
-
-    public void resetCounter() {
-        setCounter(0);
-    }
-
-    /**
-     * Sets the page indicator for the ViewPager.
-     */
-    private void setIndicator(int i) {
-        switch (i) {
-            case 0:
-                mFirstIndicator.setImageResource(R.drawable.full_10);
-                mSecondIndicator.setImageResource(R.drawable.empty_10);
-                break;
-            case 1:
-                mFirstIndicator.setImageResource(R.drawable.empty_10);
-                mSecondIndicator.setImageResource(R.drawable.full_10);
-                break;
-        }
-    }
 
 
     @Override
@@ -326,6 +224,58 @@ public class MainActivity extends FragmentActivity
         @Override
         public void onExitAmbient() {
             super.onExitAmbient();
+        }
+    }
+
+    private class MyBaseAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return mItems.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mItems[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView != null) {
+                holder = (ViewHolder) convertView.getTag();
+            } else {
+                convertView = MainActivity.this.getLayoutInflater()
+                        .inflate(android.R.layout.simple_list_item_1, parent, false);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            }
+
+            holder.nameTextView.setText(mItems[position].name);
+
+            return convertView;
+        }
+    }
+
+    static class ViewHolder {
+        TextView nameTextView;
+
+        ViewHolder(View parent) {
+            nameTextView = (TextView) parent.findViewById(android.R.id.text1);
+        }
+    }
+
+    static class DemoItem {
+        String name;
+        Class<?> activityClass;
+
+        DemoItem(String name, Class<? extends Activity> clazz) {
+            this.name = name;
+            this.activityClass = clazz;
         }
     }
 
