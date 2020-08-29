@@ -16,7 +16,20 @@
 
 <resources>
 
-    <string name="app_name">Jumping Jack</string>
+    <string name="app_name">AutoSport</string>
+    <string name="send">Send</string>
+    <string name="no_valid_file">No valid file</string>
+    <string name="send_file_by_intent">Intent to transfer data</string>
+    <string name="run_as_server">As sender</string>
+    <string name="run_as_client">As receiver</string>
+    <string name="device_unsupport">Bluetooth not supported</string>
+    <string name="cannot_work_without_bluetooth">Have to enable bluetooth</string>
+    <string name="link_failed">Failed to link</string>
+    <string name="run">Run</string>
+    <string name="connect">Connect</string>
+    <string name="refresh_devices">Refresh devices</string>
+    <string name="create_socket_failed">Failed to create socket</string>
+    <string name="connect_failed">Failed to connect</string>
     <string name="reset_counter">Reset Counter</string>
 
 </resources>
