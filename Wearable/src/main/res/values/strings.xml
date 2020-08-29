@@ -23,7 +23,7 @@
     <string name="run_as_server">As sender</string>
     <string name="run_as_client">As receiver</string>
     <string name="device_unsupport">Bluetooth not supported</string>
-    <string name="cannot_work_without_bluetooth">Have to enable bluetooth</string>
+    <string name="cannot_work_without_bluetooth">No bluetooth detected</string>
     <string name="link_failed">Failed to link</string>
     <string name="run">Run</string>
     <string name="connect">Connect</string>
