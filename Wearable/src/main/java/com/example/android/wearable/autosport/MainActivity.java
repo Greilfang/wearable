@@ -31,6 +31,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 import androidx.wear.ambient.AmbientModeSupport;
@@ -50,7 +52,7 @@ import java.util.concurrent.TimeUnit;
  * counter is persisted so that upon re-launch, the counter picks up from the last value. At any
  * stage, user can set this counter to 0.
  */
-public class MainActivity extends FragmentActivity
+public class MainActivity extends AppCompatActivity
         implements AmbientModeSupport.AmbientCallbackProvider, SensorEventListener{
 
     private static final String TAG = "MainActivity";
@@ -89,8 +91,8 @@ public class MainActivity extends FragmentActivity
         mSensorMagnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         mItems = new DemoItem[]{
-                new DemoItem(getString(R.string.send_file_by_intent), com.example.android.wearable.autosport.SendFileByIntentActivity.class),
-                new DemoItem(getString(R.string.run_as_server), com.example.android.wearable.autosport.RunAsServerActivity.class),
+                new DemoItem(getString(R.string.send_file_by_intent), SendFileByIntentActivity.class),
+                new DemoItem(getString(R.string.run_as_server), RunAsServerActivity.class),
                 new DemoItem(getString(R.string.run_as_client), RunAsClientActivity.class)
         };
 
@@ -150,21 +152,27 @@ public class MainActivity extends FragmentActivity
             mGeomagnetic = new float[3];
             System.arraycopy(event.values, 0, mGeomagnetic, 0, 3);
         }
-        // for debugging
+        // organize data
+        StringBuffer sportdata = new StringBuffer();
         if (mAccelerometer != null) {
-            Log.d(TAG, "mx : "+mAccelerometer[0]+" my : "+mAccelerometer[1]+" mz : "+mAccelerometer[2]);
+            Log.d(TAG, "ax : "+mAccelerometer[0]+" ay : "+mAccelerometer[1]+" az : "+mAccelerometer[2]);
+            sportdata.append(mAccelerometer[0] + "," + mAccelerometer[1] + "," + mAccelerometer[2] + ",");
         }
+        else
+            sportdata.append(0 + "," + 0 + "," + 0 + ",");
         if (mGyroscope != null) {
-            Log.d(TAG, "mx : "+mGyroscope[0]+" my : "+mGyroscope[1]+" mz : "+mGyroscope[2]);
+            Log.d(TAG, "gx : "+mGyroscope[0]+" gy : "+mGyroscope[1]+" gz : "+mGyroscope[2]);
+            sportdata.append(mGyroscope[0] + "," + mGyroscope[1] + "," + mGyroscope[2] + ",");
         }
+        else
+            sportdata.append(0 + "," + 0 + "," + 0 + ",");
         if (mGeomagnetic != null) {
             Log.d(TAG, "mx : "+mGeomagnetic[0]+" my : "+mGeomagnetic[1]+" mz : "+mGeomagnetic[2]);
+            sportdata.append(mGeomagnetic[0] + "," + mGeomagnetic[1] + "," + mGeomagnetic[2]);
         }
-        // organize data
-        StringBuffer sportdata = null;
-        sportdata.append(mAccelerometer[0] + "," + mAccelerometer[1] + "," + mAccelerometer[2] + "," +
-                            mGyroscope[0] + "," + mGyroscope[1] + "," + mGyroscope[2] + "," +
-                            mGeomagnetic[0] + "," + mGeomagnetic[1] + "," + mGeomagnetic[2]);
+        else
+            sportdata.append(0 + "," + 0 + "," + 0 );
+
         // write to file
         try {
             appendToFile(sportdata);
