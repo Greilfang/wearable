@@ -101,7 +101,7 @@ public class RunAsClientActivity extends AppCompatActivity {
 
                 if (mBtSocket == null) {
                     try {
-                        mBtSocket = btDevice.createRfcommSocketToServiceRecord(com.example.android.wearable.autosport.RunAsServerActivity.MY_UUID);
+                        mBtSocket = btDevice.createRfcommSocketToServiceRecord(RunAsServerActivity.MY_UUID);
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(RunAsClientActivity.this, getString(R.string.create_socket_failed), Toast.LENGTH_SHORT).show();
