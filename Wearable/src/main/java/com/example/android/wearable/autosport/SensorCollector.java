@@ -325,6 +325,16 @@ public class SensorCollector extends Service implements ISensorReadout, ISensorC
                 acceleratorListeners.add(dataListener);
                 Log.i(TAG, "Total acceleration listeners " + acceleratorListeners.size());
             }
+        } else if (requestedClass.isAssignableFrom(GyroscopeSensorData.class)) {
+            synchronized (gyroscopeListeners) {
+                gyroscopeListeners.add(dataListener);
+                Log.i(TAG, "Total gyroscope listeners " + gyroscopeListeners.size());
+            }
+        } else if (requestedClass.isAssignableFrom(MagneticSensorData.class)) {
+            synchronized (magneticListeners) {
+                magneticListeners.add(dataListener);
+                Log.i(TAG, "Total magnetic listeners " + magneticListeners.size());
+            }
         } else if (requestedClass.isAssignableFrom(GeoLocationData.class)) {
             synchronized (geoLocationListeners) {
                 geoLocationListeners.add(dataListener);

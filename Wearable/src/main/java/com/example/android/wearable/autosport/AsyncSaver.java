@@ -55,6 +55,7 @@ public class AsyncSaver extends AsyncTask<ISensorReadout, Float, Integer> {
 
                 // create a few statistics for faster lookup
                 // average and maximum heart rate
+                /*
                 float avgHeartRate = 0;
                 int maxHeartRate = 0;
                 int countHeartRate = 0;
@@ -102,27 +103,24 @@ public class AsyncSaver extends AsyncTask<ISensorReadout, Float, Integer> {
                 FileItem.writeField(fos, BitUtility.getBytes((short)0x1015), BitUtility.getBytes((float)totalAscent));
                 FileItem.writeField(fos, BitUtility.getBytes((short)0x1016), BitUtility.getBytes((float)totalDescent));
                 FileItem.writeField(fos, BitUtility.getBytes((short)0x1017), BitUtility.getBytes(avgSpeed));
-
+                */
                 // store individual events
-                for (HeartRateSensorData data : heartRateSensorData) {
-                    // 2 = data, 0 = n/a, 1 = heart, 1 = first version
-                    FileItem.writeField(fos, BitUtility.getBytes((short)0x2011), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getHeartRate()), BitUtility.getBytes(data.getAccuracy()));
-                }
-
                 for (AcceleratorSensorData data : acceleratorSensorData) {
                     // 2 = data, 0 = n/a, 3 = acceleration, 1 = first version
                     FileItem.writeField(fos, BitUtility.getBytes((short)0x2031), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getAcceleration()), BitUtility.getBytes(data.getAccuracy()));
                 }
-                // TODO: to modify
-                /*for (GyroscopeSensorData data : gyroscopeSensorData) {
-                    // 2 = data, 0 = n/a, 3 = acceleration, 1 = first version
-                    FileItem.writeField(fos, BitUtility.getBytes((short)0x2031), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getGyroscope()), BitUtility.getBytes(data.getAccuracy()));
+
+                for (GyroscopeSensorData data : gyroscopeSensorData) {
+                    // 2 = data, 0 = n/a, 5 = gyroscope, 1 = first version
+                    FileItem.writeField(fos, BitUtility.getBytes((short)0x2051), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getGyroscope()), BitUtility.getBytes(data.getAccuracy()));
                 }
+
                 for (MagneticSensorData data : magneticSensorData) {
-                    // 2 = data, 0 = n/a, 3 = acceleration, 1 = first version
-                    FileItem.writeField(fos, BitUtility.getBytes((short)0x2031), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getMagnetic()), BitUtility.getBytes(data.getAccuracy()));
-                }*/
-                for (GeoLocationData data : geoLocationData) {
+                    // 2 = data, 0 = n/a, 7 = magnetic, 1 = first version
+                    FileItem.writeField(fos, BitUtility.getBytes((short)0x2071), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getMagnetic()), BitUtility.getBytes(data.getAccuracy()));
+                }
+
+                /*for (GeoLocationData data : geoLocationData) {
                     Location location = data.getLocation();
 
                     // 2 = data, 0 = n/a, 4 = geo, 1 = first version
@@ -138,7 +136,7 @@ public class AsyncSaver extends AsyncTask<ISensorReadout, Float, Integer> {
                             BitUtility.getBytes(location.getBearing()),
                             BitUtility.getBytes(location.getSpeed()),
                             BitUtility.getBytes(data.getAccuracy()));
-                }
+                }*/
 
                 // end of file marker
                 FileItem.writeField(fos, BitUtility.getBytes((short)0xffff));

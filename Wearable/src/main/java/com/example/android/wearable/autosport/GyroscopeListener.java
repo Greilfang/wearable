@@ -1,6 +1,7 @@
 package com.example.android.wearable.autosport;
 
 import android.hardware.SensorEvent;
+import android.util.Log;
 
 public class GyroscopeListener extends SensorListener {
     private static final String TAG = GyroscopeListener.class.getSimpleName();
@@ -12,6 +13,7 @@ public class GyroscopeListener extends SensorListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        consumer.addData(new GyroscopeSensorData(event.timestamp, event.values[0], event.accuracy));
+        consumer.addData(new GyroscopeSensorData(event.timestamp, event.values, event.accuracy));
+        Log.i(TAG, "gx : "+event.values[0]+" gy : "+event.values[1]+" gz : "+event.values[2]);
     }
 }

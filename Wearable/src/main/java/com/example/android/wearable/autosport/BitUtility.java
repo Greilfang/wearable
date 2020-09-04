@@ -71,4 +71,8 @@ public class BitUtility {
     public static float getFloat(byte[] buffer, int offset) {
         return Float.intBitsToFloat(getInt(buffer, offset));
     }
+
+    public static byte[] getBytes(float[] value) {
+        return getBytes(value[0] + "," + value[1] + "," + value[2] + ",");
+    }
 }

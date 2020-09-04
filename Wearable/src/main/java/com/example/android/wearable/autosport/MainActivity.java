@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -260,6 +261,12 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
                     Toast.makeText(MainActivity.this, "Not possible.", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Failed to upload a file " + fileName + " due to " + ex.getClass().getSimpleName() + " " + ex.getMessage());
                 }
+
+                /*try {
+                    SendFileByIntentActivity sendFileByIntentActivity = new SendFileByIntentActivity();
+                }*/
+
+
             }
         });
 
@@ -310,7 +317,7 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState");
     }
@@ -436,6 +443,7 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
             }
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return this.fragments[position];
@@ -572,7 +580,7 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             return view;
         }
     }

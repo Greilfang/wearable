@@ -17,8 +17,8 @@ public class SendFileByIntentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send_file_by_intent);
-        
+        //setContentView(R.layout.activity_send_file_by_intent);
+
         initViews();
     }
 
