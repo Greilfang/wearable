@@ -12,8 +12,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.function.Consumer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class AsyncUploader extends AsyncTask<TransferRequest, Float, Integer> {
     private static final String TAG = AsyncUploader.class.getSimpleName();
     private Consumer<Integer> finishedCallback;
@@ -34,6 +32,7 @@ public class AsyncUploader extends AsyncTask<TransferRequest, Float, Integer> {
         float oneRequestValue = 1f / totalRequests;
         for (TransferRequest transferRequest : params) {
             try {
+                //TODO: to modify
                 Socket socket = new Socket(transferRequest.getAddress(), transferRequest.getPort());
                 //stream file
                 OutputStream os = socket.getOutputStream();
