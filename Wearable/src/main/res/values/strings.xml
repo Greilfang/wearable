@@ -20,6 +20,8 @@
     <string name="option_geo_always_on">GNSS Always On</string>
     <string name="clear">Clear History</string>
     <string name="send">Sync up</string>
+    <string name="refresh_devices">refresh devices</string>
+    <string name="run">run as server</string>
     <string name="delete_all_confirmation">Remove history?</string>
     <string name="files_statement">Press and hold for uploading to the companion app.</string>
     <string name="no_valid_file">No file to send.</string>

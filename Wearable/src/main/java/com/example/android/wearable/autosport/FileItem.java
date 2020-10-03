@@ -160,15 +160,15 @@ public class FileItem {
                     avgSpeed = BitUtility.getFloat(buffer, offset);
                     break;
 
-                case 0x1015: // avg acceleration (float)
+                case 0x2031: // avg acceleration (float)
                     avgAcceleration = BitUtility.getFloat(buffer, offset);
                     break;
 
-                case 0x1016: // avg avgGyroscope (float)
+                case 0x2051: // avg avgGyroscope (float)
                     avgGyroscope = BitUtility.getFloat(buffer, offset);
                     break;
 
-                case 0x1017: // avg avgMagnetic (float)
+                case 0x2071: // avg avgMagnetic (float)
                     avgMagnetic = BitUtility.getFloat(buffer, offset);
                     break;
             }

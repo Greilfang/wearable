@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 public class AsyncSaver extends AsyncTask<ISensorReadout, Float, Integer> {
     private static final String TAG = AsyncSaver.class.getSimpleName();
+    private static final int NSAMPLES = 100; // by default 20s
     private final Consumer<Integer> finishedCallback;
     private final File targetDirectory;
 
@@ -120,6 +121,10 @@ public class AsyncSaver extends AsyncTask<ISensorReadout, Float, Integer> {
                     FileItem.writeField(fos, BitUtility.getBytes((short)0x2071), BitUtility.getBytes(data.getTimestamp()), BitUtility.getBytes(data.getMagnetic()), BitUtility.getBytes(data.getAccuracy()));
                 }
 
+                // classify activity if collected sufficient data
+                if (acceleratorSensorData.size()>NSAMPLES)
+                    // TODO: classifier
+                    results = classifier.predictProbabilities(toFloatArray(data));
                 /*for (GeoLocationData data : geoLocationData) {
                     Location location = data.getLocation();
 
