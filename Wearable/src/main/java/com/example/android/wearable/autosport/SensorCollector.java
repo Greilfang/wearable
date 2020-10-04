@@ -489,7 +489,7 @@ public class SensorCollector extends Service implements ISensorReadout, ISensorC
             if (mHeartRateSensor == null) {
                 Log.e(TAG, "No access to the heart rate sensor.");
             } else {
-                mSensorManager.registerListener(heartRateListener, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(heartRateListener, mHeartRateSensor, 40000);
             }
         }
 
@@ -503,7 +503,7 @@ public class SensorCollector extends Service implements ISensorReadout, ISensorC
             if (mAcceleratorSensor == null) {
                 Log.e(TAG, "No access to the accelerometer .");
             } else {
-                mSensorManager.registerListener(acceleratorListener, mAcceleratorSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(acceleratorListener, mAcceleratorSensor, 40000);
             }
         }
 
@@ -517,7 +517,7 @@ public class SensorCollector extends Service implements ISensorReadout, ISensorC
             if (mGyroscopeSensor == null) {
                 Log.e(TAG, "No access to the gyroscope.");
             } else {
-                mSensorManager.registerListener(gyroscopeListener, mGyroscopeSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(gyroscopeListener, mGyroscopeSensor, 40000);
             }
         }
 
@@ -531,7 +531,7 @@ public class SensorCollector extends Service implements ISensorReadout, ISensorC
             if (mMagneticSensor == null) {
                 Log.e(TAG, "No access to the magnetometer.");
             } else {
-                mSensorManager.registerListener(magneticListener, mMagneticSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                mSensorManager.registerListener(magneticListener, mMagneticSensor, 40000);
             }
         }
 
