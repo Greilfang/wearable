@@ -5,7 +5,7 @@ public class MagneticSensorData extends SensorData {
 
     public MagneticSensorData(long timestamp, float[] magnetic, int accuracy) {
         super(timestamp, accuracy);
-        this.magnetic = magnetic;
+        this.magnetic = magnetic.clone();
     }
 
     public float[] getMagnetic() {

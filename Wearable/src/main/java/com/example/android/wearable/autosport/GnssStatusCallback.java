@@ -46,7 +46,7 @@ public class GnssStatusCallback extends GnssStatus.Callback {
         }
 
         System.arraycopy(localNumSatellitesUsed, 0, numSatellitesUsed, 0, localNumSatellitesUsed.length - 1 + 1);
-        Log.d(TAG, "Num satellites used " + Arrays.toString(localNumSatellitesUsed));
+        //Log.d(TAG, "Num satellites used " + Arrays.toString(localNumSatellitesUsed));
 
                 /*StringBuilder sb = new StringBuilder();
 

@@ -5,7 +5,7 @@ public class AcceleratorSensorData extends SensorData {
 
     public AcceleratorSensorData(long timestamp, float[] acceleration, int accuracy) {
         super(timestamp, accuracy);
-        this.acceleration = acceleration;
+        this.acceleration = acceleration.clone();
     }
 
     public float[] getAcceleration() {

@@ -44,7 +44,7 @@ public class GeoLocationListener implements LocationListener {
         lastPositionTimestamp = location.getElapsedRealtimeNanos();
         lastPositionAccuracy = location.getAccuracy();
 
-        Log.i(TAG, location.getLatitude() + ", " + location.getLongitude() + " +-" + location.getAccuracy() + " " + hashCode());
+        //Log.i(TAG, location.getLatitude() + ", " + location.getLongitude() + " +-" + location.getAccuracy() + " " + hashCode());
 
         if (lastSpeeds.length - 1 >= 0)
             System.arraycopy(lastSpeeds, 1, lastSpeeds, 0, lastSpeeds.length - 1);

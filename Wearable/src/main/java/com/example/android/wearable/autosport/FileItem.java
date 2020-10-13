@@ -34,7 +34,7 @@ public class FileItem {
     /**
      * The header of the file.
      */
-    public static final byte[] HEADER = "//MILTSCHEK/TRACKER/".getBytes(StandardCharsets.UTF_8);
+    public static final byte[] HEADER = "//SPORT/TRACKER/".getBytes(StandardCharsets.UTF_8);
     /**
      * The implemented version of the file.
      */

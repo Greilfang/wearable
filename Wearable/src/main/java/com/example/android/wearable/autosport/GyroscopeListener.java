@@ -14,6 +14,6 @@ public class GyroscopeListener extends SensorListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         consumer.addData(new GyroscopeSensorData(event.timestamp, event.values, event.accuracy));
-        Log.i(TAG, "gx : "+event.values[0]+" gy : "+event.values[1]+" gz : "+event.values[2]);
+        //Log.i(TAG, "gx : "+event.values[0]+" gy : "+event.values[1]+" gz : "+event.values[2]);
     }
 }

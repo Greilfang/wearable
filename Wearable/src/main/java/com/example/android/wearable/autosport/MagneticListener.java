@@ -14,6 +14,6 @@ public class MagneticListener extends SensorListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         consumer.addData(new MagneticSensorData(event.timestamp, event.values, event.accuracy));
-        Log.i(TAG, "mx : "+event.values[0]+" my : "+event.values[1]+" mz : "+event.values[2]);
+        //Log.i(TAG, "mx : "+event.values[0]+" my : "+event.values[1]+" mz : "+event.values[2]);
     }
 }

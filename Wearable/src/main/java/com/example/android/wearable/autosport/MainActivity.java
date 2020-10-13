@@ -490,7 +490,7 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
                         File[] files = getFilesDir().listFiles(new FilenameFilter() {
                             @Override
                             public boolean accept(File dir, String name) {
-                                return name.endsWith(".trk");
+                                return name.endsWith(".csv");
                             }
                         });
 
@@ -553,7 +553,7 @@ public class MainActivity extends FragmentActivity implements IDataListener<Acce
         File[] files = getFilesDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".trk");
+                return name.endsWith(".csv");
             }
         });
 
